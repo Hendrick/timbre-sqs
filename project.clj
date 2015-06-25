@@ -4,8 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [amazonica "0.3.19"]
-                 [com.taoensso/timbre "3.4.0" :exclusions [org.clojure/tools.reader]]]
+                 [amazonica "0.3.24"]
+                 [com.taoensso/timbre "4.0.1" :exclusions [org.clojure/tools.reader]]]
   :profiles
-  {:dev
-   {:dependencies [[org.elasticmq/elasticmq-server_2.11 "0.8.8" :exclusions [joda-time]]]}})
+            {:dev
+             {:dependencies [[org.elasticmq/elasticmq-server_2.11 "0.8.8" :exclusions [joda-time]]]}})
