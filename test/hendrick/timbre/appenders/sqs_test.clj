@@ -28,14 +28,12 @@
 
 (deftest test-sqs
   (testing "ensure that logs get sent to SQS"
-    (timbre/set-config! {:appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
-    (timbre/set-level! :debug)
+    (timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
     (timbre/error "A test message")
     (message-received? "test" #"A test message")))
 
 (deftest test-config
   (testing "no messages are sent if a queue is not configured"
-    (timbre/set-config! {:appenders {:sqs-appender (sqs-appender {})}})
-    (timbre/set-level! :debug)
+    (timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {})}})
     (timbre/error "A test message")
     (is (= 0 (-> (sqs/list-queues) :queue-urls count)))))

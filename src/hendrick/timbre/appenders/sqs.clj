@@ -26,7 +26,10 @@
 
 (defn sqs-appender
   "Returns an SQS appender.
-  (sqs-appender {:queue-name \"test\"}"
+
+  (sqs-appender {:queue-name \"test\"}
+  (sqs-appender {:queue-url \"http://sqs.us-east-1.amazonaws.com/123456789012/testQueue\")
+  (sqs-appender {:queue-name \"test\" :credential {:access-key \"foo\" :secret-key \"bar\" :endpoint \"baz\"})"
   [sqs-config]
   (let [queue-url (:queue-url (queue-name->url sqs-config))]
     {:async?    false
