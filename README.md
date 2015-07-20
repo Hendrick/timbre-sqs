@@ -1,14 +1,34 @@
-# timbre-sqs
+A Clojure library designed to log [Timbre](https://github.com/ptaoussanis/timbre) messages to [Amazon SQS](https://aws.amazon.com/sqs/).
 
-A Clojure library designed to ... well, that part is up to you.
+## Installation
+
+Boot:
+
+Add the following to `build.boot`:
+
+```clojure
+[com.hendrick/timbre.sqs "0.1.0"]
+```
+
+Leiningen:
+
+Add the following to `project.clj`:
+
+```clojure
+[com.hendrick/timbre.sqs "0.1.0"]
+```
 
 ## Usage
 
-FIXME
+```clojure
+(require '[com.hendrick/timbre-sqs :refer [sqs-appender]])
+(timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
+(timbre/info "A test message")
+```
 
 ## License
 
-Copyright © 2015 FIXME
+Copyright © 2015 Hendrick Automotive Group
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

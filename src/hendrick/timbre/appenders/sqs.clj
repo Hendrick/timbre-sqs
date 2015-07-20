@@ -3,11 +3,6 @@
             [amazonica.core :refer [with-credential]]
             [taoensso.timbre :as timbre]))
 
-(def default-appender-opts
-  {:async?        true
-   :enabled?      true
-   :min-level     :info})
-
 (defmacro with-aws-cred
   "If AWS credentials are supplied, then call the block using Amazonica's
    `with-credential`, otherwise just execute the block directly."
@@ -29,28 +24,21 @@
                (with-aws-cred credential
                  (sqs/create-queue queue-name)))))))
 
-(defn make-appender-fn [{:keys [queue-url credential]}]
-  "Returns a function that combines runtime and appender config, and logs to SQS so long
-   as a queue URL is either specified or can be created. If AWS credentials are specified
-   in either config, they will be used to authenticate to SQS."
-  (fn [{:keys [ap-config output]}]
-    (let [credential (or credential (:credential ap-config))
-          queue-url (or queue-url (-> (assoc ap-config :credential credential)
-                                      queue-name->url
-                                      :queue-url))]
-      (when queue-url
-        (with-aws-cred credential
-          (sqs/send-message :queue-url queue-url
-                            :message-body output))))))
+(defn sqs-appender
+  "Returns an SQS appender.
 
-(defn make-sqs-appender
-  "Returns an appender that will send logs to SQS. If configuration is not set during
-   appender creation, it may be set at runtime (using `timbre/set-config!
-   [:shared-appender-config :sqs]`). No logs will be sent to SQS until a configuration is
-   provided."
-  [& [appender-opts config]]
-  (let [config (queue-name->url config)]
-    (merge default-appender-opts
-           appender-opts
-           {:fn (make-appender-fn config)})))
-
+  (sqs-appender {:queue-name \"test\"}
+  (sqs-appender {:queue-url \"http://sqs.us-east-1.amazonaws.com/123456789012/testQueue\")
+  (sqs-appender {:queue-name \"test\" :credential {:access-key \"foo\" :secret-key \"bar\" :endpoint \"baz\"})"
+  [sqs-config]
+  (let [queue-url (:queue-url (queue-name->url sqs-config))]
+    {:async?    false
+     :enabled?  true
+     :min-level nil
+     :output-fn :inherit
+     :fn        (fn [data]
+                  (let [{:keys [output-fn]} data
+                        output-str (output-fn data)]
+                    (when queue-url
+                      (sqs/send-message :queue-url queue-url
+                                        :message-body output-str))))}))
