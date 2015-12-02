@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [amazonica "0.3.28"]
+                 [cheshire "5.5.0"]
                  [com.taoensso/timbre "4.0.2" :exclusions [org.clojure/tools.reader]]]
   :profiles
             {:dev
