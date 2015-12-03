@@ -22,7 +22,7 @@ Add the following to `project.clj`:
 
 ```clojure
 (require '[com.hendrick/timbre-sqs :refer [sqs-appender]])
-(timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
+(timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test" :application-name "uber but for dolphins"})}})
 (timbre/info "A test message")
 ```
 
