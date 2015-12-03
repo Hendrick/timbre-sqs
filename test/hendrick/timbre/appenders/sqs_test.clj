@@ -30,9 +30,15 @@
   (testing "ensure that logs get sent to SQS"
     (timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
     (timbre/error "A test message")
-    (message-received? "test" #"A test message")))
+    (message-received? "test" #"A test message"))
 
-(deftest test-config
+  (testing "ensure app name is included in the message"
+    (timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test" :application-name "acme"})}})
+    (timbre/error "")
+    (message-received? "test" #"acme"))
+)
+
+(deftest test-queue-config
   (testing "no messages are sent if a queue is not configured"
     (timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {})}})
     (timbre/error "A test message")
