@@ -1,6 +1,7 @@
 (ns hendrick.timbre.appenders.sqs
   (:require [amazonica.aws.sqs :as sqs]
             [amazonica.core :refer [with-credential]]
+            [cheshire.core :as json]
             [taoensso.timbre :as timbre]))
 
 (defmacro with-aws-cred
@@ -27,11 +28,12 @@
 (defn sqs-appender
   "Returns an SQS appender.
 
-  (sqs-appender {:queue-name \"test\"}
-  (sqs-appender {:queue-url \"http://sqs.us-east-1.amazonaws.com/123456789012/testQueue\")
-  (sqs-appender {:queue-name \"test\" :credential {:access-key \"foo\" :secret-key \"bar\" :endpoint \"baz\"})"
+  (sqs-appender {:queue-name \"test\" :application-name \"my-app\"}
+  (sqs-appender {:queue-url \"http://sqs.us-east-1.amazonaws.com/123456789012/testQueue\" :application-name \"my-app\"})
+  (sqs-appender {:queue-name \"test\" :credential {:access-key \"foo\" :secret-key \"bar\" :endpoint \"baz\" :application-name \"my-app\"})"
   [sqs-config]
-  (let [queue-url (:queue-url (queue-name->url sqs-config))]
+  (let [queue-url (:queue-url (queue-name->url sqs-config))
+        app (:application-name sqs-config)]
     {:async?    false
      :enabled?  true
      :min-level nil
@@ -41,4 +43,4 @@
                         output-str (output-fn data)]
                     (when queue-url
                       (sqs/send-message :queue-url queue-url
-                                        :message-body output-str))))}))
+                                        :message-body (json/generate-string {:message output-str :app app})))))}))

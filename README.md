@@ -7,7 +7,7 @@ Boot:
 Add the following to `build.boot`:
 
 ```clojure
-[com.hendrick/timbre.sqs "0.1.0"]
+[com.hendrick/timbre.sqs "0.2.0"]
 ```
 
 Leiningen:
@@ -15,14 +15,14 @@ Leiningen:
 Add the following to `project.clj`:
 
 ```clojure
-[com.hendrick/timbre.sqs "0.1.0"]
+[com.hendrick/timbre.sqs "0.2.0"]
 ```
 
 ## Usage
 
 ```clojure
 (require '[com.hendrick/timbre-sqs :refer [sqs-appender]])
-(timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test"})}})
+(timbre/set-config! {:level :debug :appenders {:sqs-appender (sqs-appender {:queue-name "test" :application-name "uber but for dolphins"})}})
 (timbre/info "A test message")
 ```
 
