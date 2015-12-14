@@ -2,6 +2,7 @@
   (:require [amazonica.aws.sqs :as sqs]
             [amazonica.core :refer [with-credential]]
             [cheshire.core :as json]
+            [clojure.stacktrace :as trace]
             [taoensso.timbre :as timbre]))
 
 (defmacro with-aws-cred
@@ -37,10 +38,16 @@
     {:async?    false
      :enabled?  true
      :min-level nil
-     :output-fn :inherit
+     :output-fn (fn [data]
+                  (let [{:keys [level error-level? vargs_ ?file ?line ?err_ ?ns-str msg_]} data]
+                    (json/generate-string (merge
+                                           {:app app :level level :message @vargs_ :file ?file :line ?line :ns ?ns-str}
+                                           (when-let [e @?err_]
+                                             {:error {:stacktrace (timbre/stacktrace e {:stacktrace-fonts {}})
+                                                      :message (str (trace/root-cause e))
+                                                      :error-level error-level?}})))))
      :fn        (fn [data]
-                  (let [{:keys [output-fn]} data
-                        output-str (output-fn data)]
+                  (let [{:keys [output-fn]} data]
                     (when queue-url
                       (sqs/send-message :queue-url queue-url
-                                        :message-body (json/generate-string {:message output-str :app app})))))}))
+                                        :message-body (output-fn data)))))}))
