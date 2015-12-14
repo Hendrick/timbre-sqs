@@ -1,4 +1,4 @@
-(defproject com.hendrick/timbre-sqs "0.2.0"
+(defproject com.hendrick/timbre-sqs "0.3.0"
   :description "A Timbre appender that sends log messages to Amazon SQS"
   :url "https://github.com/Hendrick/timbre-sqs"
   :license {:name "Eclipse Public License"
