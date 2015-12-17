@@ -11,3 +11,4 @@ pom.xml.asc
 .hg/
 timbre_sqs.iml
 .idea
+.scratch.clj
