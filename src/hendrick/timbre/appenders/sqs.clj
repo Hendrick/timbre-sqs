@@ -19,12 +19,12 @@
    and retrieve the corresponding url. Uses credentials from the config, if present."
   [{:keys [queue-url queue-name credential] :as config}]
   (assoc
-    config :queue-url
-    (or queue-url
-        (and queue-name
-             (:queue-url
-               (with-aws-cred credential
-                 (sqs/create-queue queue-name)))))))
+   config :queue-url
+   (or queue-url
+       (and queue-name
+            (:queue-url
+             (with-aws-cred credential
+               (sqs/create-queue queue-name)))))))
 
 (defn sqs-appender
   "Returns an SQS appender.
@@ -41,11 +41,16 @@
      :output-fn (fn [data]
                   (let [{:keys [level error-level? vargs_ ?file ?line ?err_ ?ns-str msg_]} data]
                     (json/generate-string (merge
-                                           {:app app :level level :message @vargs_ :file ?file :line ?line :ns ?ns-str}
-                                           (when-let [e @?err_]
-                                             {:error {:stacktrace (timbre/stacktrace e {:stacktrace-fonts {}})
-                                                      :message (str (trace/root-cause e))
-                                                      :error-level error-level?}})))))
+                                            {:app app
+                                             :level level
+                                             :message @vargs_
+                                             :file ?file
+                                             :line ?line
+                                             :ns ?ns-str}
+                                            (when-let [e @?err_]
+                                              {:error {:stacktrace (timbre/stacktrace e {:stacktrace-fonts {}})
+                                                       :exception-message (.getMessage e)
+                                                       :error-level error-level?}})))))
      :fn        (fn [data]
                   (let [{:keys [output-fn]} data]
                     (when queue-url
