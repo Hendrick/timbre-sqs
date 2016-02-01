@@ -28,7 +28,7 @@ Add the following to `project.clj`:
 
 ## License
 
-Copyright © 2015 Hendrick Automotive Group
+Copyright © 2016 Hendrick Automotive Group
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
