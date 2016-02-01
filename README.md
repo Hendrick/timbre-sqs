@@ -7,7 +7,7 @@ Boot:
 Add the following to `build.boot`:
 
 ```clojure
-[com.hendrick/timbre.sqs "0.2.0"]
+[com.hendrick/timbre.sqs "0.4.0"]
 ```
 
 Leiningen:
@@ -15,7 +15,7 @@ Leiningen:
 Add the following to `project.clj`:
 
 ```clojure
-[com.hendrick/timbre.sqs "0.2.0"]
+[com.hendrick/timbre.sqs "0.4.0"]
 ```
 
 ## Usage
